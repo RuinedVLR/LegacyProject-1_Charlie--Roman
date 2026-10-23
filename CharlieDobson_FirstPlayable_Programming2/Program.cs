@@ -32,6 +32,8 @@ namespace CharlieDobson_FirstPlayable_Programming2
 
             Console.WriteLine($"{GameManager.Instance._writtenName}'s Game");
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+            CharacterSelection();
+            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             Tutorial();
             Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
             StartMenu();
@@ -83,6 +85,43 @@ namespace CharlieDobson_FirstPlayable_Programming2
             Console.WriteLine("HIT E TO PLAY ENDLESS MODE!");
             Console.WriteLine("~~~~~~~~~");
         }
-      
+
+        //Lets the player pick which character class they want to play as
+        public static void CharacterSelection()
+        {
+            Console.WriteLine("PLEASE PICK YOUR CHARACTER");
+            Console.WriteLine("1 - Standard (a normal, balanced character)");
+            Console.WriteLine("2 - Assassin (deals double damage, but has a 15% chance to take double damage back from enemies)");
+            Console.WriteLine("3 - Gambler (gold gained can be anywhere from -1.5x to 3x the normal amount)");
+            Console.WriteLine("4 - Vampire (loses 1 HP per move, but heals a random amount (1-5) whenever it attacks an enemy)");
+
+            ConsoleKey choice = ConsoleKey.NoName;
+            while (choice == ConsoleKey.NoName)
+            {
+                choice = Console.ReadKey(true).Key;
+
+                if (choice == ConsoleKey.D1 || choice == ConsoleKey.NumPad1)
+                {
+                    GameManager.Instance._selectedCharacterClass = CharacterClass.Standard;
+                }
+                else if (choice == ConsoleKey.D2 || choice == ConsoleKey.NumPad2)
+                {
+                    GameManager.Instance._selectedCharacterClass = CharacterClass.Assassin;
+                }
+                else if (choice == ConsoleKey.D3 || choice == ConsoleKey.NumPad3)
+                {
+                    GameManager.Instance._selectedCharacterClass = CharacterClass.Gambler;
+                }
+                else if (choice == ConsoleKey.D4 || choice == ConsoleKey.NumPad4)
+                {
+                    GameManager.Instance._selectedCharacterClass = CharacterClass.Vampire;
+                }
+                else
+                {
+                    choice = ConsoleKey.NoName;
+                }
+            }
+        }
+
     }
 }

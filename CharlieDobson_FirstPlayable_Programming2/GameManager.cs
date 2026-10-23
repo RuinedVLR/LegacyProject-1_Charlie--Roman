@@ -24,6 +24,7 @@ namespace CharlieDobson_FirstPlayable_Programming2
         public Player _gamePlayer;
         public bool _isDead = false;
         public string _writtenName;
+        public CharacterClass _selectedCharacterClass = CharacterClass.Standard;
         public int _gameStateCheck;
         public int currentEnemiesKilled;
         public int totalEnemiesBoundary;

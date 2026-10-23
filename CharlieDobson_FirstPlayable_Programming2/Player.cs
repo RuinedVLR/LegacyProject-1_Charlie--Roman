@@ -11,16 +11,18 @@ namespace CharlieDobson_FirstPlayable_Programming2
         //You can name your player so I added this
         public string _playerName;
         public int _goldAmount;
+        public CharacterClass _characterClass;
 
         public int _attackMultipler = 1;
         public int _goldMultipler = 1;
 
-        public Player(string name, int maxHealth, int startingXPos, int startingYPos) : base(maxHealth, startingXPos, startingYPos)
+        public Player(string name, int maxHealth, int startingXPos, int startingYPos, CharacterClass characterClass = CharacterClass.Standard) : base(maxHealth, startingXPos, startingYPos)
         {
             _playerName = name;
             _health = new Health(maxHealth);
             _position = new Position(startingXPos, startingYPos);
             _goldAmount = 0;
+            _characterClass = characterClass;
         }
 
         //Shows the HUD of the player
@@ -28,7 +30,7 @@ namespace CharlieDobson_FirstPlayable_Programming2
         {
             string _upperCaseName = _playerName.ToUpper();
 
-            _hudString = $"{_upperCaseName}'S HUD\n~~~HEALTH~~~\n   {_health.CurrentHealth}/{_health.MaxHealth}\n\n~~~POSITION~~~\n   ({_position._xPos},{_position._yPos})\n\n~~~GOLD~~~\n    {_goldAmount}";
+            _hudString = $"{_upperCaseName}'S HUD ({_characterClass})\n~~~HEALTH~~~\n   {_health.CurrentHealth}/{_health.MaxHealth}\n\n~~~POSITION~~~\n   ({_position._xPos},{_position._yPos})\n\n~~~GOLD~~~\n    {_goldAmount}";
 
             return _hudString;
 
@@ -44,13 +46,50 @@ namespace CharlieDobson_FirstPlayable_Programming2
         public void Attack(Enemy em)
         {
             int _attackPower = GameManager.Instance._random.Next(1, 6);
+            int _damage = _attackPower * _attackMultipler;
 
-            em._health.TakeDamage(_attackPower * _attackMultipler);
-                
+            //Assassin deals double damage to enemies
+            if (_characterClass == CharacterClass.Assassin)
+            {
+                _damage *= 2;
+            }
+
+            em._health.TakeDamage(_damage);
+
+            //Assassin has a 15% chance of taking double damage back from the enemy
+            if (_characterClass == CharacterClass.Assassin)
+            {
+                int _retaliationChance = GameManager.Instance._random.Next(1, 101);
+                if (_retaliationChance <= 15)
+                {
+                    _health.TakeDamage(_attackPower * 2);
+                }
+            }
+
+            //Vampire heals a random amount whenever it attacks an enemy
+            if (_characterClass == CharacterClass.Vampire)
+            {
+                int _healAmount = GameManager.Instance._random.Next(1, 11);
+                _health.Heal(_healAmount);
+            }
         }
         public void GetGold(int amount)
         {
-            _goldAmount = _goldAmount + amount * _goldMultipler;
+            int _finalAmount = amount * _goldMultipler;
+
+            //Gambler can gain up to 3x the gold, or lose up to 1.5x the gold
+            if (_characterClass == CharacterClass.Gambler)
+            {
+                double _gambleMultipler = (GameManager.Instance._random.NextDouble() * 4.5) - 1.5;
+                _finalAmount = (int)(amount * _gambleMultipler);
+            }
+
+            _goldAmount = _goldAmount + _finalAmount;
+
+            if (_goldAmount < 0)
+            {
+                _goldAmount = 0;
+            }
         }
 
         public override void Movement()
@@ -68,6 +107,12 @@ namespace CharlieDobson_FirstPlayable_Programming2
                         UpdateTile(_position._xPos, _position._yPos);
                         ChangePosition(movementX: currentX, movementY: currentY);
                         GameManager.Instance._gameMap._isOccupied[_position._yPos, _position._xPos] = true;
+
+                        //Vampire loses health with every movement
+                        if (_characterClass == CharacterClass.Vampire)
+                        {
+                            _health.TakeDamage(1);
+                        }
                     }
 
                     foreach(Enemy em in GameManager.Instance._enemies)

@@ -40,7 +40,7 @@ namespace CharlieDobson_FirstPlayable_Programming2
                 }
             }
             //Creates player properly, then sets the spot as occupied amd shows your hud
-            GameManager.Instance._gamePlayer = new Player(name: GameManager.Instance._writtenName, maxHealth: 100, startingXPos: GameManager.Instance._randomXPosition, startingYPos: GameManager.Instance._randomYPosition);
+            GameManager.Instance._gamePlayer = new Player(name: GameManager.Instance._writtenName, maxHealth: 100, startingXPos: GameManager.Instance._randomXPosition, startingYPos: GameManager.Instance._randomYPosition, characterClass: GameManager.Instance._selectedCharacterClass);
             GameManager.Instance._gameMap._isOccupied[GameManager.Instance._gamePlayer._position._yPos, GameManager.Instance._gamePlayer._position._xPos] = true;
         }
 
