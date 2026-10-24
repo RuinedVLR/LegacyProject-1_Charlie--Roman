@@ -92,8 +92,8 @@ namespace CharlieDobson_FirstPlayable_Programming2
             Console.WriteLine("PLEASE PICK YOUR CHARACTER");
             Console.WriteLine("1 - Standard (a normal, balanced character)");
             Console.WriteLine("2 - Assassin (deals double damage, but has a 15% chance to take double damage back from enemies)");
-            Console.WriteLine("3 - Gambler (gold gained can be anywhere from -1.5x to 3x the normal amount)");
-            Console.WriteLine("4 - Vampire (loses 1 HP per move, but heals a random amount (1-5) whenever it attacks an enemy)");
+            Console.WriteLine("3 - Gambler (gold gained can be anywhere from -1.5x to 4x the normal amount)");
+            Console.WriteLine("4 - Vampire (loses 1 HP per move, but heals a random amount (1-10) whenever it attacks an enemy)");
 
             ConsoleKey choice = ConsoleKey.NoName;
             while (choice == ConsoleKey.NoName)

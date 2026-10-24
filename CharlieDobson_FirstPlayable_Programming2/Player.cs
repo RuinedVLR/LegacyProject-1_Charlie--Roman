@@ -16,6 +16,8 @@ namespace CharlieDobson_FirstPlayable_Programming2
         public int _attackMultipler = 1;
         public int _goldMultipler = 1;
 
+        public string _lastEventMessage = "";
+
         public Player(string name, int maxHealth, int startingXPos, int startingYPos, CharacterClass characterClass = CharacterClass.Standard) : base(maxHealth, startingXPos, startingYPos)
         {
             _playerName = name;
@@ -30,7 +32,7 @@ namespace CharlieDobson_FirstPlayable_Programming2
         {
             string _upperCaseName = _playerName.ToUpper();
 
-            _hudString = $"{_upperCaseName}'S HUD ({_characterClass})\n~~~HEALTH~~~\n   {_health.CurrentHealth}/{_health.MaxHealth}\n\n~~~POSITION~~~\n   ({_position._xPos},{_position._yPos})\n\n~~~GOLD~~~\n    {_goldAmount}";
+            _hudString = $"{_upperCaseName}'S HUD ({_characterClass})\n~~~HEALTH~~~\n   {_health.CurrentHealth}/{_health.MaxHealth}\n\n~~~POSITION~~~\n   ({_position._xPos},{_position._yPos})\n\n~~~GOLD~~~\n    {_goldAmount}\n\n~~~LAST EVENT~~~\n    {_lastEventMessage}";
 
             return _hudString;
 
@@ -62,7 +64,9 @@ namespace CharlieDobson_FirstPlayable_Programming2
                 int _retaliationChance = GameManager.Instance._random.Next(1, 101);
                 if (_retaliationChance <= 15)
                 {
-                    _health.TakeDamage(_attackPower * 2);
+                    int _retaliationDamage = _attackPower * 2;
+                    _health.TakeDamage(_retaliationDamage);
+                    _lastEventMessage = $"Assassin took {_retaliationDamage} retaliation damage!";
                 }
             }
 
@@ -71,17 +75,19 @@ namespace CharlieDobson_FirstPlayable_Programming2
             {
                 int _healAmount = GameManager.Instance._random.Next(1, 11);
                 _health.Heal(_healAmount);
+                _lastEventMessage = $"Vampire healed {_healAmount} HP from attack!";
             }
         }
         public void GetGold(int amount)
         {
             int _finalAmount = amount * _goldMultipler;
 
-            //Gambler can gain up to 3x the gold, or lose up to 1.5x the gold
+            //Gambler can gain up to 4x the gold, or lose up to 1.5x the gold
             if (_characterClass == CharacterClass.Gambler)
             {
-                double _gambleMultipler = (GameManager.Instance._random.NextDouble() * 4.5) - 1.5;
+                double _gambleMultipler = (GameManager.Instance._random.NextDouble() * 5.5) - 1.5;
                 _finalAmount = (int)(amount * _gambleMultipler);
+                _lastEventMessage = $"Gambler multiplier x{_gambleMultipler:F2}: {(_finalAmount >= 0 ? "+" : "")}{_finalAmount} gold!";
             }
 
             _goldAmount = _goldAmount + _finalAmount;
